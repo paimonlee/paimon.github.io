@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 08:33:34 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>git/stash</title><link>https://paimonlee.github.io/paimon.github.io/post/git-stash.html</link><description>stash命令用于暂时隐藏修改，一般情况下的命令是&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 08:36:26 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>git/stash</title><link>https://paimonlee.github.io/paimon.github.io/post/git-stash.html</link><description># 隐藏指定文件&#13;
+一般情况下，暂时隐藏修改的命令是&#13;
 ```shell&#13;
 # 使用上一个commit的信息&#13;
 git stash&#13;
@@ -11,7 +12,15 @@ git stash支持隐藏指定文件，在隐藏指定文件时，不能省略push�
 ```shell&#13;
 git stash push **/*.java&#13;
 git stash push -m '' **/*.java&#13;
-```。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/git-stash.html</guid><pubDate>Thu, 20 Jun 2024 07:42:49 +0000</pubDate></item><item><title>协程</title><link>https://paimonlee.github.io/paimon.github.io/post/xie-cheng.html</link><description># 关键词&#13;
+```&#13;
+&#13;
+# 使用指定的隐藏记录&#13;
+一般情况下使用指定的隐藏记录命令是&#13;
+```shell&#13;
+git stash pop [index]&#13;
+```&#13;
+&#13;
+在没有冲突的情况下，这个命令会把隐藏给删除。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/git-stash.html</guid><pubDate>Thu, 20 Jun 2024 07:42:49 +0000</pubDate></item><item><title>协程</title><link>https://paimonlee.github.io/paimon.github.io/post/xie-cheng.html</link><description># 关键词&#13;
 coroutine、yield、next、send&#13;
 &#13;
 # 协程（coroutine）&#13;
