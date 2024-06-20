@@ -1,5 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 12:19:30 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>git/stash</title><link>https://paimonlee.github.io/paimon.github.io/post/git-stash.html</link><description># 隐藏指定文件&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 14:00:36 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>python/协程</title><link>https://paimonlee.github.io/paimon.github.io/post/python--xie-cheng.html</link><description># 关键字&#13;
+&#13;
+async、await、asyncio&#13;
+&#13;
+# 运行一个协程&#13;
+&#13;
+```python&#13;
+import asyncio&#13;
+&#13;
+async def main():&#13;
+    print('hello')&#13;
+    await asyncio.sleep(1)&#13;
+    print('world')&#13;
+&#13;
+asyncio.run(main())&#13;
+```&#13;
+&#13;
+要实际运行一个协程，asyncio 提供了一下几种机制：&#13;
+&#13;
+- asyncio.run()函数用来运行最高层级的入口点'main()'函数&#13;
+  &#13;
+- 对协程执行await。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/python--xie-cheng.html</guid><pubDate>Thu, 20 Jun 2024 14:00:10 +0000</pubDate></item><item><title>git/stash</title><link>https://paimonlee.github.io/paimon.github.io/post/git-stash.html</link><description># 隐藏指定文件&#13;
 一般情况下，暂时隐藏修改的命令是&#13;
 ```shell&#13;
 # 使用上一个commit的信息&#13;
