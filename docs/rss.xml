@@ -1,5 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 05:32:35 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>协程</title><link>https://paimonlee.github.io/paimon.github.io/post/xie-cheng.html</link><description># 关键词&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movies 人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 20 Jun 2024 08:01:50 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>git/stash指定的文件</title><link>https://paimonlee.github.io/paimon.github.io/post/git-stash-zhi-ding-de-wen-jian.html</link><description>stash命令用于暂时隐藏修改，一般情况下的命令是&#13;
+```shell&#13;
+# 使用上一个commit的信息&#13;
+git stash&#13;
+# 使用指定信息&#13;
+git stash -m ''&#13;
+```&#13;
+&#13;
+git stash支持隐藏指定文件，在隐藏指定文件时，不能省略push参数，必须使用完整的命令&#13;
+```shell&#13;
+git stash push **/*.java&#13;
+git stash push -m '' **/*.java&#13;
+```。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/git-stash-zhi-ding-de-wen-jian.html</guid><pubDate>Thu, 20 Jun 2024 07:42:49 +0000</pubDate></item><item><title>协程</title><link>https://paimonlee.github.io/paimon.github.io/post/xie-cheng.html</link><description># 关键词&#13;
 coroutine、yield、next、send&#13;
 &#13;
 # 协程（coroutine）&#13;
