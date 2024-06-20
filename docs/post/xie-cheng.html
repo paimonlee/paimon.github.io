@@ -10,15 +10,19 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="# 关键词
+
 coroutine、yield、next、send
 
 # 协程（coroutine）
+
 协作式多任务的子程序，允许执行被挂起与被恢复。">
 <meta property="og:title" content="协程">
 <meta property="og:description" content="# 关键词
+
 coroutine、yield、next、send
 
 # 协程（coroutine）
+
 协作式多任务的子程序，允许执行被挂起与被恢复。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://paimonlee.github.io/paimon.github.io/post/xie-cheng.html">
@@ -107,9 +111,39 @@ coroutine 消费者
         yield 生产者
 </code></pre>
 <h2>同线程比较</h2>
-<p>协程非常类似与线程，但是协程是协作式多任务的，典型的线程是内核级抢占式多任务的。协程提供并发行而非并行性，协程超过线程的好处是它们可以用于硬性实时的语境（在协程之间的切换不需要涉及任何系统调用或者任何阻塞调用）</p>
-<p>引用：<br>
-<a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B" rel="nofollow">wikipedia-协程</a></p></div>
+<p>协程非常类似与线程，但是协程是协作式多任务的，典型的线程是内核级抢占式多任务的。协程提供并发行而非并行性，协程超过线程的好处是它们可以用于硬性实时的语境（在协程之间的切换不需要涉及任何系统调用或者任何阻塞调用），这里不需要守卫关键区块的同步性原语（primitive）如互斥锁、信号量等，并且不需要来自操作系统的支持。有可能以一种对调用代码透明的方式，使用抢占式调度的线程实现协程，但会失去某些优势（特别是对硬性实时操作系统的适合性和相对廉价的相互之间切换）</p>
+<p>用户级线程是协作式多任务的轻量级线程，概念上上和协程一样。区别在于协程是语言级别的狗仔，可以看作是一种流程控制，而线程是系统层级的构造。</p>
+<h2>生成器</h2>
+<p>生成器也叫半协程，是协程的子集。尽管二者都可以yield多次，暂停suspend自身的执行，并允许在多个入口点重新进入，但是它们的差异在于，协程有能力控制在它让位之后哪个协程立即续接它来执行，而生成器不能，他只能把控制权转交给调用者。在生成器的yield语句不指定要跳转到的协程，而是向父进程传递返回值.</p>
+<p>可以在生成器设施之上实现协程，这需要通过顶层的分派器历程的援助，它显示的把控制权传递给生成器传回的记号所指定的另一个生成器</p>
+<pre class="notranslate"><code class="notranslate">var q := new 队列
+
+generator 生产者
+    loop
+        while q 不满载
+            建立某些新产品
+            向 q 增加这些产品
+        yield 消费者
+generator 消费者
+    loop
+        while q 不空载
+            从 q 移除某些产品
+            使用这些产品
+        yield 生产者
+
+subroutine 分派器
+    var d := new 字典(生成器 -&gt; 迭代器)
+    d[生产者] := start 生产者
+    d[消费者] := start 消费者
+    var 当前 := 生产者
+    loop
+        call 当前
+        当前 := next d[当前]
+
+call 分派器
+</code></pre>
+<p>生成器和迭代器的用法有着微妙的差异，生成器看起来像是函数而表现得像是迭代器。在python中生成器是迭代器的子构造，他是返回迭代器的函数</p>
+<p>引用：<a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B" rel="nofollow">wikipedia-协程</a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
