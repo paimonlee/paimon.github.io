@@ -15,13 +15,13 @@
 # 使用上一个commit的信息
 git stash
 # 使用指定信息
-git stash -m ''
+git stash -m 'This is a message'
 ```
 
 git stash支持隐藏指定文件，在隐藏指定文件时，不能省略push参数，必须使用完整的命令
 ```shell
 git stash push **/*.java
-git stash push -m '' **/*.java
+git stash push -m 'This is a message' **/*.java
 ```
 
 # 使用指定的隐藏记录
@@ -38,13 +38,13 @@ git stash pop [index]
 # 使用上一个commit的信息
 git stash
 # 使用指定信息
-git stash -m ''
+git stash -m 'This is a message'
 ```
 
 git stash支持隐藏指定文件，在隐藏指定文件时，不能省略push参数，必须使用完整的命令
 ```shell
 git stash push **/*.java
-git stash push -m '' **/*.java
+git stash push -m 'This is a message' **/*.java
 ```
 
 # 使用指定的隐藏记录
@@ -117,10 +117,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用上一个commit的信息</span>
 git stash
 <span class="pl-c"><span class="pl-c">#</span> 使用指定信息</span>
-git stash -m <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span></pre></div>
+git stash -m <span class="pl-s"><span class="pl-pds">"</span>This is a message<span class="pl-pds">"</span></span></pre></div>
 <p>git stash支持隐藏指定文件，在隐藏指定文件时，不能省略push参数，必须使用完整的命令</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">git stash push <span class="pl-k">**</span>/<span class="pl-k">*</span>.java
-git stash push -m <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">**</span>/<span class="pl-k">*</span>.java</pre></div>
+git stash push -m <span class="pl-s"><span class="pl-pds">"</span>This is a message<span class="pl-pds">"</span></span> <span class="pl-k">**</span>/<span class="pl-k">*</span>.java</pre></div>
 <h1>使用指定的隐藏记录</h1>
 <p>一般情况下使用指定的隐藏记录命令是</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">git stash pop [index]</pre></div>
