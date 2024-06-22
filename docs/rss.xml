@@ -1,5 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Fri, 21 Jun 2024 09:13:30 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Python】协程</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Python%E3%80%91-xie-cheng.html</link><description># 关键字&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Sat, 22 Jun 2024 08:03:39 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>原码、反码和补码</title><link>https://paimonlee.github.io/paimon.github.io/post/yuan-ma-%E3%80%81-fan-ma-he-bu-ma.html</link><description>原码：最高位符号位，其余对齐本身值即可&#13;
+&#13;
+反码（反码，反的是原码）：&#13;
+    * 正数：反码和原码一致&#13;
+    * 负数：符号位为1，其余位对原码取反&#13;
+&#13;
+补码（补码，补的就是反码）：&#13;
+    * 正数：补码和原码一致&#13;
+    * 负数：符号位为1，其余位反码+1&#13;
+&#13;
+```&#13;
+7&#13;
+原码：0 0 0 0  0 1 1 1&#13;
+反码：0 0 0 0  0 1 1 1&#13;
+补码：0 0 0 0  0 1 1 1&#13;
+&#13;
+-7&#13;
+原码：1 0 0 0  0 1 1 1&#13;
+反码：1 1 1 1  1 0 0 0 &#13;
+补码：1 1 1 1  1 0 0 1&#13;
+```。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/yuan-ma-%E3%80%81-fan-ma-he-bu-ma.html</guid><pubDate>Sat, 22 Jun 2024 07:36:24 +0000</pubDate></item><item><title>【Python】协程</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Python%E3%80%91-xie-cheng.html</link><description># 关键字&#13;
 &#13;
 async、await、asyncio&#13;
 &#13;
