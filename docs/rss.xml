@@ -1,5 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Sun, 23 Jun 2024 07:38:35 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>寄存器名称</title><link>https://paimonlee.github.io/paimon.github.io/post/ji-cun-qi-ming-cheng.html</link><description># 不同的寄存器&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Sun, 23 Jun 2024 16:12:58 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>汇编</title><link>https://paimonlee.github.io/paimon.github.io/post/hui-bian.html</link><description># 汇编指令&#13;
+&#13;
+&#13;
+# 内存复制&#13;
+&#13;
+# 堆栈指令&#13;
+&#13;
+&#13;
+# 汇编如何写函数&#13;
+&#13;
+&#13;
+# 堆栈传参&#13;
+&#13;
+&#13;
+# 堆栈平衡&#13;
+。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/hui-bian.html</guid><pubDate>Sun, 23 Jun 2024 07:38:26 +0000</pubDate></item><item><title>寄存器名称</title><link>https://paimonlee.github.io/paimon.github.io/post/ji-cun-qi-ming-cheng.html</link><description># 不同的寄存器&#13;
 &#13;
 ```&#13;
 32位    16位    8位&#13;
