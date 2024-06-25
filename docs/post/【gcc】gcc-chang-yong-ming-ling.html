@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/38132146"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 基本命令
+gcc的基本语法是
+```shell
+gcc [options] [filename]
+```
+
+其中options表示参数，[filename]表示相关文件的名称
+
+## -x language filename
+设定文件的语言，使后缀名无效，对之后的后缀名做同样的处理，语言类型有c,objective-c,c-header,c++,cpp-output,assembler和assembler-with-cpp
+```shell
+gcc -x c hello.pig
+```
+
+## -x none file
+关闭上一个选项，也就是让gcc根据文件名后缀，自动识别文件类型
+```shell
+gcc -x c hello.pig -x none hello2.c
+```
+
+## -c
+只激活预处理，编译和汇编，也就是他只把程序做成obj文件,下面命令将会生成.o的obj文件
+```shell
+gcc -c hello.c
+```
+
+## -S 
+只激活预处理和编译，就是把文件编译成汇编代码，下面命令将会生成汇编代码，可以使用文本编辑器查看
+```shell
+gcc -S hello.c
+```
+
+## -E
+只激活预处理,这个命令不生成文件，需要将输出重定向到一个文件内
+```shell
+gcc -E hello.c > pianoapan.txt
+gcc -E hello.c | more
+```
+## -o
+指定目标文件名称，默认的名字是a.out
+```shell
+gcc -o hello hello.c
+gcc -o hello.asm -S hello.c
+```
+
+## -pipe
+使用管道替代编译中的临时文件，在使用非gnu汇编工具的时候，可能有问题
+```shell
+gcc -pipe -o hello hello.c
+```
+
+## -ansi
+关闭gnu c中与ansi c不兼容的特性，只激活ansi c的专有特性（包括asm inline typeof关键字，以及unix，vax 等预处理宏)
+
+## -fno-asm
+实现-ansi选项的部分功能，禁止asm，inline何typeof用作关键字
+
+## fno-strict-prototype
+只对g++起作用，使用这个选项，g++ 将对不带参数的函数，都认为是没有显示的对参数的个数和类型说明，而不是没有参数。">
+<meta property="og:title" content="【gcc】gcc常用命令">
+<meta property="og:description" content="# 基本命令
+gcc的基本语法是
+```shell
+gcc [options] [filename]
+```
+
+其中options表示参数，[filename]表示相关文件的名称
+
+## -x language filename
+设定文件的语言，使后缀名无效，对之后的后缀名做同样的处理，语言类型有c,objective-c,c-header,c++,cpp-output,assembler和assembler-with-cpp
+```shell
+gcc -x c hello.pig
+```
+
+## -x none file
+关闭上一个选项，也就是让gcc根据文件名后缀，自动识别文件类型
+```shell
+gcc -x c hello.pig -x none hello2.c
+```
+
+## -c
+只激活预处理，编译和汇编，也就是他只把程序做成obj文件,下面命令将会生成.o的obj文件
+```shell
+gcc -c hello.c
+```
+
+## -S 
+只激活预处理和编译，就是把文件编译成汇编代码，下面命令将会生成汇编代码，可以使用文本编辑器查看
+```shell
+gcc -S hello.c
+```
+
+## -E
+只激活预处理,这个命令不生成文件，需要将输出重定向到一个文件内
+```shell
+gcc -E hello.c > pianoapan.txt
+gcc -E hello.c | more
+```
+## -o
+指定目标文件名称，默认的名字是a.out
+```shell
+gcc -o hello hello.c
+gcc -o hello.asm -S hello.c
+```
+
+## -pipe
+使用管道替代编译中的临时文件，在使用非gnu汇编工具的时候，可能有问题
+```shell
+gcc -pipe -o hello hello.c
+```
+
+## -ansi
+关闭gnu c中与ansi c不兼容的特性，只激活ansi c的专有特性（包括asm inline typeof关键字，以及unix，vax 等预处理宏)
+
+## -fno-asm
+实现-ansi选项的部分功能，禁止asm，inline何typeof用作关键字
+
+## fno-strict-prototype
+只对g++起作用，使用这个选项，g++ 将对不带参数的函数，都认为是没有显示的对参数的个数和类型说明，而不是没有参数。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://paimonlee.github.io/paimon.github.io/post/%E3%80%90gcc%E3%80%91gcc-chang-yong-ming-ling.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/38132146">
+<title>【gcc】gcc常用命令</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">【gcc】gcc常用命令</h1>
+<div class="title-right">
+    <a href="https://paimonlee.github.io/paimon.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/paimonlee/paimon.github.io/issues/11" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>基本命令</h1>
+<p>gcc的基本语法是</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc [options] [filename]</pre></div>
+<p>其中options表示参数，[filename]表示相关文件的名称</p>
+<h2>-x language filename</h2>
+<p>设定文件的语言，使后缀名无效，对之后的后缀名做同样的处理，语言类型有c,objective-c,c-header,c++,cpp-output,assembler和assembler-with-cpp</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -x c hello.pig</pre></div>
+<h2>-x none file</h2>
+<p>关闭上一个选项，也就是让gcc根据文件名后缀，自动识别文件类型</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -x c hello.pig -x none hello2.c</pre></div>
+<h2>-c</h2>
+<p>只激活预处理，编译和汇编，也就是他只把程序做成obj文件,下面命令将会生成.o的obj文件</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -c hello.c</pre></div>
+<h2>-S</h2>
+<p>只激活预处理和编译，就是把文件编译成汇编代码，下面命令将会生成汇编代码，可以使用文本编辑器查看</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -S hello.c</pre></div>
+<h2>-E</h2>
+<p>只激活预处理,这个命令不生成文件，需要将输出重定向到一个文件内</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -E hello.c <span class="pl-k">&gt;</span> pianoapan.txt
+gcc -E hello.c <span class="pl-k">|</span> more</pre></div>
+<h2>-o</h2>
+<p>指定目标文件名称，默认的名字是a.out</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -o hello hello.c
+gcc -o hello.asm -S hello.c</pre></div>
+<h2>-pipe</h2>
+<p>使用管道替代编译中的临时文件，在使用非gnu汇编工具的时候，可能有问题</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -pipe -o hello hello.c</pre></div>
+<h2>-ansi</h2>
+<p>关闭gnu c中与ansi c不兼容的特性，只激活ansi c的专有特性（包括asm inline typeof关键字，以及unix，vax 等预处理宏)</p>
+<h2>-fno-asm</h2>
+<p>实现-ansi选项的部分功能，禁止asm，inline何typeof用作关键字</p>
+<h2>fno-strict-prototype</h2>
+<p>只对g++起作用，使用这个选项，g++ 将对不带参数的函数，都认为是没有显示的对参数的个数和类型说明，而不是没有参数。无论gcc是否使用这个参数，都将对没有带参数的函数，认为成没有显示说明的类型。</p>
+<h2>-fthis-is-variable</h2>
+<p>向传统C++看齐，可以使用this当一般变量使用</p>
+<h2>fcond-mismatch</h2>
+<p>允许条件表达式的第二和第三参数类型不匹配，表达式的值将为void类型</p>
+<h2>-funsigned-char,-fnp-signed-char,-fsigned-char,-fno-unsigned-char</h2>
+<p>这四个参数是对char类型进行设置，决定将char类型设置成unsigned char(前两参数) 或者 signed char(后两参数)</p>
+<h2>-include file</h2>
+<p>相当于 #include </p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc hello.c -include /root/pianopan.h</pre></div>
+<h2>-imacros file</h2>
+<p>将file文件的宏，扩展到gcc/g++的输入文件，宏定义本身并不出现在输入文件中</p>
+<h2>-Dmacro</h2>
+<p>相当于C语言中的 #define macro</p>
+<h2>-Dmacro=defn</h2>
+<p>相当于C语言中的 #define macro=defn</p>
+<h2>-Umacro</h2>
+<p>相当于C语言中的#undef macro</p>
+<h2>-undef</h2>
+<p>取消对任何非标准宏的定义</p>
+<h2>-Idir</h2>
+<p>在你使用 #include "file" 的时候，gcc/g++会在当前目录查找你所指定的头文件，如果没有找到，他回到默认的头文件目录找，如果使用 -I指定目录，他会现在指定的目录找，然后再按常规的顺序查找</p>
+<h2>-I-</h2>
+<p>取消-Idir</p>
+<h2>-idirafter dir</h2>
+<p>在-I的目录查找失败，就到这个目录里面查找</p>
+<h2>-iprefix prefix , -iwithprefix dir</h2>
+<p>一般一起使用，如果-I的目录查找失败，会到prefix+dir下面查找</p>
+<h2>--nostdinc</h2>
+<p>使编译器不在系统默认的头文件目录里面找头文件，一般和-I联合使用，明确限定头文件的位置</p>
+<h2>-nostdin C++</h2>
+<p>规定不在g++指定的标准路径中搜索，但仍在其他的路径中搜索，此选项在创libg++库使用</p>
+<h2>-C</h2>
+<p>在预处理的时候，不删除注释信息，一般和-E使用，有时候分析程序，用这个很方便</p>
+<h2>-M</h2>
+<p>生成文件关联的信息。包含目标文件所依赖的所有源代码你可以使用</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gcc -M hello.c</pre></div>
+<h2>-MM</h2>
+<p>和上面的那个一样，但是这个命令将忽略第二层的依赖关系，简单来说就是--depth=1</p>
+<h2>-MD</h2>
+<p>和-M相同，但是将输出导入到.d文件里面</p>
+<h2>-MMD</h2>
+<p>和-MM相同，但是输出导入到.d的文件里面</p>
+<h2>-Wa,option</h2>
+<p>此选项将传递option选项给汇编程序，如果option中间有逗号，就将option分成多个选项，然后传递给汇编程序</p>
+<h2>-Wl,option</h2>
+<p>此选项将传递option选项给链接程序，如果option中间有逗号，就将option分成多个选项，然后传递给连接程序</p>
+<h2>-llibrary</h2>
+<p>指定编译的时候使用的库</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 指定使用math库</span>
+gcc -lm hello.c</pre></div>
+<h2>-Ldir</h2>
+<p>指定编译的时候，搜索库的路径。否则编译只会在标准库路径查找</p>
+<h2>-O0,-O1,-O2,-O3</h2>
+<p>编译器的优化选项的4个级别，0没有优化，1默认值，3最高级别</p>
+<h2>-g</h2>
+<p>指示编译器，在编译的时候，产生调试信息</p>
+<h2>-gstabs</h2>
+<p>此选项已stabs格式声明调试信息，但是不包括gdb调试信息</p>
+<h2>-gstabs+</h2>
+<p>此选项以stabs格式声明调试信息，并且包含仅供gdb使用的额外调试信息</p>
+<h2>-ggdb</h2>
+<p>此选项将尽可能的生成gdb的可以使用的调试信息</p>
+<h2>-static</h2>
+<p>此选项将禁止使用动态库，所以编译出来的东西一般很大，也不需要使用动态链接库，就可以运行</p>
+<h2>-share</h2>
+<p>此选项将尽量使用动态库，所以生成的文件比较小，但是需要系统提供动态库</p>
+<h2>-traditional</h2>
+<p>试图让编译器支持传统的C语言特性</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://paimonlee.github.io/paimon.github.io"> Paimon's blog </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","paimonlee/paimon.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+</html>
