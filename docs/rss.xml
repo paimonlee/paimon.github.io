@@ -1,5 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Wed, 26 Jun 2024 11:11:53 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Shell】启动子进程</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91-qi-dong-zi-jin-cheng.html</link><description>source 和 . 不启用新的shell，在当前shell中执行，设定的局部变量在执行完命令后仍然有效。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91-qi-dong-zi-jin-cheng.html</guid><pubDate>Wed, 26 Jun 2024 11:08:35 +0000</pubDate></item><item><title>【gcc】gcc常用命令</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90gcc%E3%80%91gcc-chang-yong-ming-ling.html</link><description># 基本命令&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Wed, 26 Jun 2024 13:25:44 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【gcc】编译阶段</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90gcc%E3%80%91-bian-yi-jie-duan.html</link><description># 1、预处理&#13;
+替换头和宏定义&#13;
+```shell&#13;
+gcc -E main.c -o main.i&#13;
+```&#13;
+# 2、汇编&#13;
+将预处理之后的代码转换为汇编代码&#13;
+```shell&#13;
+gcc -S main.i -o main.s&#13;
+```&#13;
+&#13;
+# 3、编译&#13;
+将汇编代码转换为二进制码&#13;
+```shell&#13;
+gcc -c main.s -o main.o&#13;
+```&#13;
+&#13;
+# 4、链接&#13;
+将经编译好的二进制文件链接对应的库链接，否则程序是无法运行的&#13;
+```shell&#13;
+gcc main.o -o main&#13;
+```。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/%E3%80%90gcc%E3%80%91-bian-yi-jie-duan.html</guid><pubDate>Wed, 26 Jun 2024 13:25:18 +0000</pubDate></item><item><title>【Shell】启动子进程</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91-qi-dong-zi-jin-cheng.html</link><description>source 和 . 不启用新的shell，在当前shell中执行，设定的局部变量在执行完命令后仍然有效。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91-qi-dong-zi-jin-cheng.html</guid><pubDate>Wed, 26 Jun 2024 11:08:35 +0000</pubDate></item><item><title>【gcc】gcc常用命令</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90gcc%E3%80%91gcc-chang-yong-ming-ling.html</link><description># 基本命令&#13;
 gcc的基本语法是&#13;
 ```shell&#13;
 gcc [options] [filename]&#13;
