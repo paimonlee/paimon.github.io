@@ -9,50 +9,34 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 汇编指令
+<meta name="description" content="# 基本语法
 
+汇编程序可以分为三个段
 
-# 内存复制
+* data段
+* bss段
+* text段
 
-# 堆栈指令
+## data段
 
-
-# 汇编如何写函数
-
-
-# 堆栈传参
-
-
-# 堆栈平衡
-
-
-参考文档: 
-[简明 x86 汇编指南](https://arthurchiao.art/blog/x86-asm-guide-zh/)。">
+数据段被用于声明初始化的数据或常数。">
 <meta property="og:title" content="汇编">
-<meta property="og:description" content="# 汇编指令
+<meta property="og:description" content="# 基本语法
 
+汇编程序可以分为三个段
 
-# 内存复制
+* data段
+* bss段
+* text段
 
-# 堆栈指令
+## data段
 
-
-# 汇编如何写函数
-
-
-# 堆栈传参
-
-
-# 堆栈平衡
-
-
-参考文档: 
-[简明 x86 汇编指南](https://arthurchiao.art/blog/x86-asm-guide-zh/)。">
+数据段被用于声明初始化的数据或常数。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://paimonlee.github.io/paimon.github.io/post/hui-bian.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/38132146">
 <title>汇编</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -106,7 +90,71 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>汇编指令</h1>
+<div class="markdown-body" id="postBody"><h1>基本语法</h1>
+<p>汇编程序可以分为三个段</p>
+<ul>
+<li>data段</li>
+<li>bss段</li>
+<li>text段</li>
+</ul>
+<h2>data段</h2>
+<p>数据段被用于声明初始化的数据或常数。此数据在运行时不会更改。可以在段中声明各种常用值，文件名或缓冲区大小等。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.data</span></pre></div>
+<h2>bss段</h2>
+<p>在bss声明变量。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.bss</span>
+
+</pre></div>
+<h2>text段</h2>
+<p>代码段被用于保持实际的代码。该段必须以全集声明_start开头，该声明告诉内核程序从何处开始执行。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.</span><span class="pl-k">test</span>
+    <span class="pl-c1">global</span> <span class="pl-en">_start</span>
+<span class="pl-en">_start:</span></pre></div>
+<h2>注释</h2>
+<p>汇编语言注释以分号(;)开头。它可以包含任何可打印字符，包括空格。它可以单独出现在一行上。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c">;该程序在屏幕上显示一条信息</span></pre></div>
+<p>或者，与指令在同一行上。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-c"> ;加上ebx的值到eax</span></pre></div>
+<h2>汇编语言声明</h2>
+<p>汇编语言程序包含三种类型的语句</p>
+<ul>
+<li>可执行指令或说明</li>
+<li>汇编程序指令或伪操作</li>
+<li>宏</li>
+</ul>
+<p>可执行指令或简单的指令告诉处理器做什么。每个指令由一个操作码组成。每个可执行指令生成一个机器语言指令。该汇编指令或位操作讲述装配过程中的各方面的汇编。这些是不可执行的，不会生成机器语言指令。宏是一种代码替换机制。</p>
+<h2>汇编语言语句的语法</h2>
+<p>汇编语言语句每行输入一个语句。每个语句遵循一下格式</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">[label]</span><span class="pl-en"> mnemonic </span><span class="pl-s1">[</span><span class="pl-en">operands</span><span class="pl-s1">]</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-c">;comment]</span></pre></div>
+<p>基本命令包括两段，第一段是要执行的指令（或助记符）的名称，第二段是命令的操作数或参数。以下是一些典型汇编语句的示例</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">inc</span><span class="pl-en"> count</span><span class="pl-c">         ; 增加内存变量count</span>
+<span class="pl-k">mov</span><span class="pl-en"> total</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">48</span><span class="pl-c">     ; 将值48转移到内存变量total</span>
+<span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">ah</span><span class="pl-s1">,</span><span class="pl-v">bh</span><span class="pl-c">         ; 将寄存器BH内容添加到ah寄存器</span>
+<span class="pl-k">and</span><span class="pl-en"> mask1</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">128</span><span class="pl-c">    ; 对变量mask1 和 128执行and操作</span>
+
+<span class="pl-k">add</span><span class="pl-en"> marks</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">10</span><span class="pl-c">     ; 将10加到变量marks</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">al</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">10</span><span class="pl-c">        ; 将值10传送到al寄存器</span></pre></div>
+<h2>汇编语言的Hello World 程序</h2>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len</span><span class="pl-c">	; message length</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span><span class="pl-c">	; message to write</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span><span class="pl-c">	; file descriptor(stdout)</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span><span class="pl-c">	; system call number(sys_write)</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">	; call kernel</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span><span class="pl-c">	; system call number(sys)</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">	; call kernel</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">msg db </span><span class="pl-s">'Hello, world!'</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">0xa</span><span class="pl-c">	;string to be printed</span>
+<span class="pl-en">len equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg</span><span class="pl-c">			;length of the string</span>
+</pre></div>
+<p>在NASM中编译和链接程序</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nasm -f elf hello.asm
+<span class="pl-c"><span class="pl-c">#</span> 链接目标文件</span>
+ld -m elf_i386 -s -o hello hello.o</pre></div>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
