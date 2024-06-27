@@ -47,7 +47,7 @@ read -a array -p 'please input 5 nums,split by blank:'
 
 
 ```shell
-readarray -t array << $()
+readarray -t array <<< $(ifconfig |grep inet|grep -v inet6|awk -F' ' '{print $2}')
 ```
 
 # mapfile
@@ -91,7 +91,7 @@ read -a array -p 'please input 5 nums,split by blank:'
 
 
 ```shell
-readarray -t array << $()
+readarray -t array <<< $(ifconfig |grep inet|grep -v inet6|awk -F' ' '{print $2}')
 ```
 
 # mapfile
@@ -182,7 +182,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>-C    每读取指定行数就调用一次回调函数</li>
 <li>-c     指定调用回调函数的行数</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">readarray -t array <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">$()</span></span></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">readarray -t array <span class="pl-k">&lt;&lt;&lt;</span> <span class="pl-s"><span class="pl-s"><span class="pl-pds">$(</span>ifconfig</span></span> <span class="pl-k">|</span>grep inet<span class="pl-k">|</span>grep -v inet6<span class="pl-k">|</span>awk -F<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">'</span>{print $2}<span class="pl-pds">'</span></span>)</pre></div>
 <h1>mapfile</h1></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

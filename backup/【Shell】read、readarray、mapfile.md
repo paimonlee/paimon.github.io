@@ -36,7 +36,7 @@ read -a array -p "please input 5 nums,split by blank:"
 
 
 ```shell
-readarray -t array << $()
+readarray -t array <<< $(ifconfig |grep inet|grep -v inet6|awk -F' ' '{print $2}')
 ```
 
 # mapfile
