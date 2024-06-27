@@ -1,5 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 27 Jun 2024 13:58:56 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Shell】 split</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</link><description>split用于切分文件。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</guid><pubDate>Thu, 27 Jun 2024 13:58:14 +0000</pubDate></item><item><title>【Shell】tar命令</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91tar-ming-ling.html</link><description># tar&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 27 Jun 2024 14:12:48 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Shell】 split</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</link><description>## split命令的基本语法如下:&#13;
+```shell&#13;
+split [参数] [输入文件] [输出文件前缀]&#13;
+``&#13;
+## split命令参数解析&#13;
+split命令支持一系列参数，下面是其中几个常用的参数：&#13;
+&#13;
+* -b: 指定每个输出文件的大小，单位为字节或者KB、MB&#13;
+* -C: 指定每个输出文件的行数，可以使用数字后缀G(表示吉比字节)、M(表示兆字节)、K(表示千字节)&#13;
+* -l: 指定每个输出文件的行数&#13;
+* -d: 使用数字作为输出文件名后缀，默认使用字母&#13;
+* -a: 使用字母或数字后缀作为输出文件名，默认使用两个字母后缀&#13;
+* –verbose: 显示拆分过程的详细信息。</description><guid isPermaLink="true">https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</guid><pubDate>Thu, 27 Jun 2024 13:58:14 +0000</pubDate></item><item><title>【Shell】tar命令</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91tar-ming-ling.html</link><description># tar&#13;
 tar 命令用于将文件压缩,功能十分强大&#13;
 基本使用方法如下&#13;
 ```shell&#13;
