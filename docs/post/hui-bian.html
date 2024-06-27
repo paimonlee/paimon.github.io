@@ -155,6 +155,36 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-shell"><pre class="notranslate">nasm -f elf hello.asm
 <span class="pl-c"><span class="pl-c">#</span> 链接目标文件</span>
 ld -m elf_i386 -s -o hello hello.o</pre></div>
+<h1>汇编语言 内存段</h1>
+<h2>内存段</h2>
+<p>如果将section 关键字替换为segment，也会得到相同的结果。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">segment .text</span><span class="pl-c">      ;code segment</span>
+   <span class="pl-c1">global</span> <span class="pl-en">_start</span><span class="pl-c">    ;must be declared for linker </span>
+<span class="pl-en">      </span>
+<span class="pl-en">_start:</span><span class="pl-c">            ;tell linker entry point</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len</span><span class="pl-c">     ;message length</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span><span class="pl-c">     ;message to write</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span><span class="pl-c">       ;file descriptor (stdout)</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span><span class="pl-c">       ;system call number (sys_write)</span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">        ;call kernel</span>
+
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span><span class="pl-c">       ;system call number (sys_exit)</span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">        ;call kernel</span>
+
+<span class="pl-en">segment .data</span><span class="pl-c">      ;data segment</span>
+<span class="pl-en">msg     db </span><span class="pl-s">'Hello, world!'</span><span class="pl-s1">,</span><span class="pl-c1">0xa</span><span class="pl-c">   ;our dear string</span>
+<span class="pl-en">len     equ     $ </span><span class="pl-s1">-</span><span class="pl-en"> msg</span><span class="pl-c">          ;length of our dear string</span></pre></div>
+<h2>内存段</h2>
+<p>分段存储器模型将系统存储器分为独立的分段组，这些分段由位于分段寄存器中的指针引用。每个段用于包含特定类型的数据。一个段用于包含指令代码，另一段用于存储数据元素，第三段保留程序堆栈。</p>
+<ul>
+<li>数据段 由.data段和.bss段表示。.data节用于声明存储区，在该存储区中为程序存储了数据元素。声明数据元素后，无法扩展此部分，并且在整个程序中他保持静态。.bss部分也是一个静态内存部分，它包含缓冲区，供稍后在程序中声明的数据使用。这个缓冲区内存是零填充的</li>
+<li>代码段 由.text部分表示。这在内存中定义了一个存储指令代码的区域。这也是一个固定区域</li>
+<li>堆栈 该段包含传递给程序中的函数和过程的数据值</li>
+</ul>
+<h1>寄存器</h1>
+<h2>寄存器</h2>
+<p>处理器操作主要涉及到处理数据。该数据可以存储在存储器中并从其访问。从存储器中读取数据中将数据存储到存储器中会减慢处理器的速度，因为这涉及到通过控制总线发送数据请求并进入存储器存储单元并通过同意通道获取数据的复杂过程。</p>
+<p>为了加速处理器的运行，处理器包括一些内存处理器存储位置，称为寄存器。寄存器存储</p>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
