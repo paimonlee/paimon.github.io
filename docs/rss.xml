@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 27 Jun 2024 14:12:48 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Shell】 split</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</link><description>## split命令的基本语法如下:&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Paimon's blog</title><link>https://paimonlee.github.io/paimon.github.io</link><description>Life is a fucking movie!人生如戲啊，靚仔！</description><copyright>Paimon's blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/38132146</url><title>avatar</title><link>https://paimonlee.github.io/paimon.github.io</link></image><lastBuildDate>Thu, 27 Jun 2024 14:14:05 +0000</lastBuildDate><managingEditor>Paimon's blog</managingEditor><ttl>60</ttl><webMaster>Paimon's blog</webMaster><item><title>【Shell】 split</title><link>https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell%E3%80%91%20split.html</link><description>## split命令的基本语法如下:&#13;
 ```shell&#13;
 split [参数] [输入文件] [输出文件前缀]&#13;
-``&#13;
+```&#13;
 ## split命令参数解析&#13;
 split命令支持一系列参数，下面是其中几个常用的参数：&#13;
-&#13;
 * -b: 指定每个输出文件的大小，单位为字节或者KB、MB&#13;
 * -C: 指定每个输出文件的行数，可以使用数字后缀G(表示吉比字节)、M(表示兆字节)、K(表示千字节)&#13;
 * -l: 指定每个输出文件的行数&#13;
