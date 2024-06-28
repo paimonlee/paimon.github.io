@@ -160,7 +160,7 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <p>如果将section 关键字替换为segment，也会得到相同的结果。</p>
 <div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">segment .text</span><span class="pl-c">      ;code segment</span>
    <span class="pl-c1">global</span> <span class="pl-en">_start</span><span class="pl-c">    ;must be declared for linker </span>
-<span class="pl-en">      </span>
+<span class="pl-en">    </span>
 <span class="pl-en">_start:</span><span class="pl-c">            ;tell linker entry point</span>
 <span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len</span><span class="pl-c">     ;message length</span>
 <span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span><span class="pl-c">     ;message to write</span>
@@ -224,18 +224,49 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <p>将32位指令指针寄存器的32位标志寄存器组合起来称为控制寄存器。许多指令涉及比较和数学计算，并更改标志的状态，而其他一些条件指令则测试这些状态标志的值，将控制流带到其他位置</p>
 <p>通用标志位是：</p>
 <ul>
-<li>溢出标志（OF）</li>
-<li>方向标志（DF）</li>
-<li>中断标志（IF）</li>
-<li>陷阱标志（TF）</li>
-<li>符号标志（ZF）</li>
-<li>零标志（ZF）</li>
-<li>辅助进位标志（AF）</li>
-<li>奇偶校验标志（PF）</li>
-<li>进位标志（CF）</li>
+<li>溢出标志（OF）指示有符号算术运算后数据的高阶位（最左位）的溢出。</li>
+<li>方向标志（DF）它确定向左或向右移动或比较字符串数据的方向。DF值为0时，字符串操作为从左向右的方向；当DF值为1时，字符串操作为从右至左的方向</li>
+<li>中断标志（IF）确定是否忽略或处理外部中断（如键盘中断输入等）。当值为0时，它禁用外部中断，当值为1时，使能中断</li>
+<li>陷阱标志（TF）允许在单步模式下设置处理器的操作。我们使用的DEBUG程序设置了陷阱标志，因此我们可以一次逐步执行一条指令。</li>
+<li>符号标志（SF）显示算术运算结果符号。根据算术运算后数据项的符号设置此标志。该符号由最左位的高位指示。正结果将SF的值清除为0，负结果将其设置为1.</li>
+<li>零标志（ZF）指示算术或比较运算的结果。非零结果将零标志清零，零结果将其清零</li>
+<li>辅助进位标志（AF）包含经过算术运算后从位3到位4的进位；用于专业算术。当1字节算术运算引起从第3位到第4位的进位时，将设置AF。</li>
+<li>奇偶校验标志（PF）指示从算术运算获得的结果中1位的总数。偶数个1位将奇数校验标志位清为0，奇数个1位将将奇偶校验标志清为1。</li>
+<li>进位标志（CF）在算术运算后，它包含一个高位（最左边）的进位。它还存储移位或旋转操作的最后一位的内容。</li>
 </ul>
 <h2>段寄存器</h2>
-<p>段是程序中定义的</p>
+<p>段是程序中定义的特定区域，用于包含数据，代码和堆栈。有三个部分</p>
+<ul>
+<li>代码段（CS） 它包含所有要执行的指令。16位代码段寄存器或CS寄存器存储代码段的起始地址。</li>
+<li>数据段（DS） 它包含数据、常量和工作区。16位数据段寄存器或DS寄存器存储数据段的起始地址。</li>
+<li>堆栈段（SS） 它包含数据或过程或子进程的返回地址。它被实现为“堆栈”数据结构。堆栈段寄存器或SS寄存器存储堆栈的起始地址。</li>
+</ul>
+<p>除了DS，CS，SS寄存器外，还有其他段寄存器-ES（额外段），FS和GS，他们提供了用于存储数据的其他段。在汇编语言中，程序需要访问存储器的位置。段中的所有存储位置都相对于段的起始地址。段的其实地址可以时16或者16进制的整数，因此，所有此类存储地址中最右边的十六进制数字为0，通常不存储在段寄存器中。段寄存器存储段的起始地址。为了获得数据或指令在段中的确切位置，需要一个偏移值（或者位移）。为了引用段中的任何存储位置，处理器将段寄存器中的段地址与该位置的偏移值进行组合。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .text</span>
+    <span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> len</span><span class="pl-c"> ; message length</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> msg</span><span class="pl-c"> ; message to write</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">1</span><span class="pl-c">   ; file descriptor (stdout)</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">4</span><span class="pl-c">   ; system call number (sys_write)</span>
+<span class="pl-en">    </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">     ; call kernel</span>
+
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">9</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> s2</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">1</span>
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">4</span>
+<span class="pl-en">    </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">    </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">1</span><span class="pl-c">    ; system call number (sys_exit)</span>
+<span class="pl-en">    </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-c">      ; call kernel</span>
+
+
+
+<span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">msg db </span><span class="pl-s">'Displaying 9 stars'</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">0xa</span>
+<span class="pl-en">len equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg</span>
+<span class="pl-en">s2 times </span><span class="pl-c1">9</span><span class="pl-en"> db </span><span class="pl-s">'*'</span></pre></div>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
