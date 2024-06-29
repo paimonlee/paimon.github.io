@@ -160,7 +160,7 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <p>如果将section 关键字替换为segment，也会得到相同的结果。</p>
 <div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">segment .text</span><span class="pl-c">      ;code segment</span>
    <span class="pl-c1">global</span> <span class="pl-en">_start</span><span class="pl-c">    ;must be declared for linker </span>
-<span class="pl-en">    </span>
+<span class="pl-en">  </span>
 <span class="pl-en">_start:</span><span class="pl-c">            ;tell linker entry point</span>
 <span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len</span><span class="pl-c">     ;message length</span>
 <span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span><span class="pl-c">     ;message to write</span>
@@ -267,6 +267,423 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <span class="pl-en">msg db </span><span class="pl-s">'Displaying 9 stars'</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">0xa</span>
 <span class="pl-en">len equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg</span>
 <span class="pl-en">s2 times </span><span class="pl-c1">9</span><span class="pl-en"> db </span><span class="pl-s">'*'</span></pre></div>
+<h1>系统调用</h1>
+<h2>系统调用</h2>
+<p>是用户空间和内核空间之间接口的API。我们已经使用了系统调用。sys_write和sys_exit分别用于写入屏幕和退出程序</p>
+<h1>Linux系统调用</h1>
+<p>可以通过以下步骤使用linux系统调用</p>
+<ul>
+<li>将系统呼叫号放入EAX寄存器中</li>
+<li>将参数保存到系统调用中的寄存器EBX、ECX等中</li>
+<li>调用相关的中断（80h）</li>
+<li>结果通常在EAX寄存器中返回</li>
+</ul>
+<p>用于存储系统调用参数的寄存器有六个，分别是EBX、EDX、ESI、EDI和EBP，这些寄存器采用从EBX寄存器开始的连续参数。如果有六个以上的自变量，则第一个自变量的存储位置将存储在EBX寄存器中。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span></pre></div>
+<p>sys_write的使用</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span></pre></div>
+<p>所有系统调用及其编号都列在/usr/include/asm/unistd.h中</p>
+<p>从键盘读取一个数字并将其显示在屏幕上</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">	userMsg db </span><span class="pl-s">'Please enter a number:'</span>
+<span class="pl-en">	lenUserMsg equ $</span><span class="pl-s1">-</span><span class="pl-en">userMsg</span>
+<span class="pl-en">	dispMsg db </span><span class="pl-s">'You have entered:'</span>
+<span class="pl-en">	lenDispMsg equ $</span><span class="pl-s1">-</span><span class="pl-en">dispMsg</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .bss</span>
+<span class="pl-en">	num resb </span><span class="pl-c1">5</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .txt</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">userMsg</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">lenUserMsg</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">3</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">num</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">5</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">dispMsg</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">lenDispMsg</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">num</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">5</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span></pre></div>
+<h1>寻址模式</h1>
+<h2>寻址模式</h2>
+<p>大多数汇编语言指令都需要处理操作数。操作数地址提供了要处理的数据存储的位置。有些指令不需要操作数，而另一些指令则需要一个，两个或者三个操作数。当一条指令需要两个操作数时，第一个操作数通常时目的地，他在寄存器或存储器位置中包含数据，第二个操作数是源。源包含要传递的数据（立即寻址）或数据的地址（在寄存器或者存储器中）。通常，操作后源数据保持不变。</p>
+<p>寻址的三种基本模式是</p>
+<ul>
+<li>寄存器寻址</li>
+<li>立即寻址</li>
+<li>内存寻址</li>
+</ul>
+<h2>寄存器寻址</h2>
+<p>在这种寻址模式下，寄存器包含操作数。根据指令，寄存器可以是第一个操作数，第二个操作数或者两者。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">dx</span><span class="pl-s1">,</span><span class="pl-en">tax_rate</span><span class="pl-c"> ;寄存器是第一个操作数</span>
+<span class="pl-k">mov</span><span class="pl-en"> count</span><span class="pl-s1">,</span><span class="pl-v">cx</span><span class="pl-c">	;寄存器是第二个操作数</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-v">edx</span><span class="pl-c">	;两个操作数都是寄存器</span></pre></div>
+<p>由于寄存器之间的数据处理不涉及内存，因此可以最快的处理数据</p>
+<h2>立即寻址</h2>
+<p>立即数操作数具有常量值或表达式。当具有两个操作数的指令使用立即寻址时，第二个操作数可以是寄存器或者存储器位置，而第二个操作数是立即数。第一个操作数定义数据的长度</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">BYTE_VALUE DB </span><span class="pl-c1">150</span><span class="pl-c"> ;一个字节值被定义</span>
+<span class="pl-en">WORD_VALUE DW </span><span class="pl-c1">300</span><span class="pl-c"> ;一个字节值被定义</span>
+<span class="pl-k">ADD</span><span class="pl-en"> BYTE_VALUE</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">65</span><span class="pl-c">;BYTE_VALUE加一个立即操作数65</span>
+<span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">AX</span><span class="pl-s1">,</span><span class="pl-c1">45H</span><span class="pl-c">	  ;立即常数45H转移到AX</span></pre></div>
+<h2>直接内存寻址</h2>
+<p>在内存寻址模式下指定操作数时，通常需要直接访问主存储器，通常时数据段。这种寻址方式导致数据处理变慢。为了找到数据在内存中的确切位置，我们需要短期是地址（通常在DS寄存器中找到）和偏移量。因此偏移量也称为有效地址。在直接寻址模式下，偏移量值直接作为指令的一部分指定，通常由变量名指示。汇编器计算偏移值并维护一个符号表，该表存储程序中使用的所有变量的偏移值。直接存储寻址中，一个操作数引用一个存储器位置，另一个操作数引用一个寄存器</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">ADD</span><span class="pl-en"> BYTE_VALUE</span><span class="pl-s1">,</span><span class="pl-v">DL</span><span class="pl-c"> ;将寄存器添加到存储位置</span>
+<span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">BX</span><span class="pl-s1">,</span><span class="pl-en">WORD_VALUE</span><span class="pl-c"> ;将内存中的操作数添加到寄存器中</span></pre></div>
+<h2>直接偏移寻址</h2>
+<p>该模式使用算术运算符修改地址</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">BYTE_TABLE DB </span><span class="pl-c1">14</span><span class="pl-s1">,</span><span class="pl-c1">15</span><span class="pl-s1">,</span><span class="pl-c1">22</span><span class="pl-s1">,</span><span class="pl-c1">45</span><span class="pl-c">  ;字节表</span>
+<span class="pl-en">WORD_TABLE </span><span class="pl-c1">134</span><span class="pl-s1">,</span><span class="pl-c1">345</span><span class="pl-s1">,</span><span class="pl-c1">564</span><span class="pl-s1">,</span><span class="pl-c1">123</span><span class="pl-c"> ;字表</span></pre></div>
+<p>以下操作数将数据从内存中的表访问到寄存器中</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">cl</span><span class="pl-s1">,</span><span class="pl-en">BYTE_TABLE</span><span class="pl-s1">[</span><span class="pl-c1">2</span><span class="pl-s1">]</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">cl</span><span class="pl-s1">,</span><span class="pl-en">BYTE_TABLE </span><span class="pl-s1">+</span><span class="pl-en"> </span><span class="pl-c1">2</span><span class="pl-en"> </span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">cx</span><span class="pl-s1">,</span><span class="pl-en">WORD_TABLE</span><span class="pl-s1">[</span><span class="pl-c1">3</span><span class="pl-s1">]</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">cx</span><span class="pl-s1">,</span><span class="pl-en">WORD_TABLE </span><span class="pl-s1">+</span><span class="pl-en"> </span><span class="pl-c1">3</span></pre></div>
+<h2>间接内存寻址</h2>
+<p>此寻址模式利用计算机的Segmeng：Offset寻址功能功能。通常，在方括号内百年好的基址寄存器EBX，EBP（或BX，BP）和索引寄存器（DI，SI）用于内存引用</p>
+<p>间接寻址通常用于包含多个元素（如数组）的变量。阵列的其实地址存储在EBX寄存器中。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">my_table times </span><span class="pl-c1">10</span><span class="pl-en"> DW </span><span class="pl-c1">0</span><span class="pl-c">  ; 分配10个字（2个字节），每个字都初始化为0</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,[</span><span class="pl-en">my_table</span><span class="pl-s1">]</span><span class="pl-c">	; ebx中my_table的有效地址</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-v">ebx</span><span class="pl-s1">],</span><span class="pl-c1">110</span><span class="pl-c">		; my_table[0] = 110</span>
+<span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">2</span><span class="pl-c">		; ebx = ebx + 2</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-v">ebx</span><span class="pl-s1">],</span><span class="pl-c1">123</span><span class="pl-c">		; my_table[1] = 123</span></pre></div>
+<h2>MOV 指令</h2>
+<p>该指令用于将数据从一个存储空间移动到另一个存储空间。mov指令采用两个操作数。</p>
+<pre class="notranslate"><code class="notranslate">MOV destination,source
+</code></pre>
+<p>MOV 指令可能具有以下五种形式之一</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">MOV</span><span class="pl-en"> 寄存器</span><span class="pl-s1">,</span><span class="pl-en"> 寄存器</span>
+<span class="pl-k">MOV</span><span class="pl-en"> 寄存器</span><span class="pl-s1">,</span><span class="pl-en"> 立即数</span>
+<span class="pl-k">MOV</span><span class="pl-en"> 寄存器</span><span class="pl-s1">,</span><span class="pl-en"> 内存</span>
+<span class="pl-k">MOV</span><span class="pl-en"> 内存</span><span class="pl-s1">,</span><span class="pl-en"> 立即数</span>
+<span class="pl-k">MOV</span><span class="pl-en"> 内存</span><span class="pl-s1">,</span><span class="pl-en"> 寄存器</span>
+</pre></div>
+<p><strong>注意</strong></p>
+<ul>
+<li>MOV操作数中的两个操作数应该具有相同的大小</li>
+<li>源操作数的值保持不变</li>
+</ul>
+<p>以下命令会引起歧义：</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">my_table</span><span class="pl-s1">]</span>
+<span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-v">ebx</span><span class="pl-s1">],</span><span class="pl-en"> </span><span class="pl-c1">110</span></pre></div>
+<p>目前不清楚要移动等于110的字节等效值还是等效于字的字符。在这种情况下使用类型说明符时明智的。</p>
+<table role="table">
+<thead>
+<tr>
+<th>类型说明符</th>
+<th>寻址字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BYTE</td>
+<td>1</td>
+</tr>
+<tr>
+<td>WORD</td>
+<td>2</td>
+</tr>
+<tr>
+<td>DWORD</td>
+<td>4</td>
+</tr>
+<tr>
+<td>QWORD</td>
+<td>8</td>
+</tr>
+<tr>
+<td>TBYTE</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">name db </span><span class="pl-s">'Alex MO'</span>
+<span class="pl-en">nameLength equ $</span><span class="pl-s1">-</span><span class="pl-en">name</span>
+
+<span class="pl-en">newLine db </span><span class="pl-s">'\n'</span>
+<span class="pl-en">newLineLength equ $</span><span class="pl-s1">-</span><span class="pl-en">newLine</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">nameLength</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">name</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-c">	;输出\n无法实现换行</span>
+<span class="pl-c">	;mov edx,newLineLength </span>
+<span class="pl-c">	;mov ecx,newLine </span>
+<span class="pl-c">	;mov ebx,1</span>
+<span class="pl-c">	;mov eax,4</span>
+<span class="pl-c">	;int 0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">name</span><span class="pl-s1">],</span><span class="pl-en"> dword </span><span class="pl-s">'Feng'</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">nameLength</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">name</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
+<h1>变量</h1>
+<h2>变量</h2>
+<p>nasm提供了各种定义指令来为变量保留存储空间。define assembler指令用于分配存储空间。它可以用于保留以及初始化一个或多个字节。</p>
+<h2>为初始数据分配存储空间</h2>
+<p>初始化数据的存储分配语句的语法为</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">[variable-name]</span><span class="pl-en"> define</span><span class="pl-s1">-</span><span class="pl-en">directive initial</span><span class="pl-s1">-</span><span class="pl-en">value </span><span class="pl-s1">[,</span><span class="pl-en">initial</span><span class="pl-s1">-</span><span class="pl-en">value</span><span class="pl-s1">]</span></pre></div>
+<p>其中，变量名是每个存储空间的标识符。汇编器为数据段中定义的每个变量名称关联一个偏移值。</p>
+<p>define指令有五种基本形式</p>
+<table role="table">
+<thead>
+<tr>
+<th>指令</th>
+<th>目的</th>
+<th>存储空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB</td>
+<td>定义字节</td>
+<td>分配一个字节</td>
+</tr>
+<tr>
+<td>DW</td>
+<td>定义字</td>
+<td>分配两个字节</td>
+</tr>
+<tr>
+<td>DD</td>
+<td>定义双字</td>
+<td>分配四个字节</td>
+</tr>
+<tr>
+<td>DQ</td>
+<td>定义四字</td>
+<td>分配八个字节</td>
+</tr>
+<tr>
+<td>DT</td>
+<td>定义十个字节</td>
+<td>分配十个字节</td>
+</tr>
+</tbody>
+</table>
+<p>以下时一些使用define指令的示例</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">choice db  </span><span class="pl-s">'y'</span>
+<span class="pl-en">number dw </span><span class="pl-c1">12345</span>
+<span class="pl-en">neg_number dw </span><span class="pl-s1">-</span><span class="pl-c1">12345</span>
+<span class="pl-en">big_number dq </span><span class="pl-c1">123456789</span>
+<span class="pl-en">real_number1 dd </span><span class="pl-c1">1</span><span class="pl-en">.</span><span class="pl-c1">234</span>
+<span class="pl-en">real_number2 dq </span><span class="pl-c1">123</span><span class="pl-en">.</span><span class="pl-c1">456</span></pre></div>
+<p><strong>注意</strong></p>
+<ul>
+<li>字符的每个字节均以十六进制形式存储为ASCII值</li>
+<li>每个十进制值都将自动转换为其等效的16位二进制数，并以十六进制数形式存储</li>
+<li>处理器使用小尾数字节顺序</li>
+<li><strong>负数将转换为其2的补码表示形式</strong></li>
+<li>短浮点数和长浮点数分别使用32位和64位表示</li>
+</ul>
+<p>define指令的使用</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">choice</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">choice DB </span><span class="pl-s">'y'</span></pre></div>
+<h2>为未初始化的数据分配存储空间</h2>
+<p>reserve指令用于为未初始化的数据保留空间。reserve指令采用单个操作数，该操作数指定要保留的空间单位数。每个define指令都有一个相关的reserve指令。</p>
+<p>保留指令有五种基本形式</p>
+<table role="table">
+<thead>
+<tr>
+<th>指令</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RESB</td>
+<td>保留一个字节</td>
+</tr>
+<tr>
+<td>RESW</td>
+<td>保留字</td>
+</tr>
+<tr>
+<td>RESD</td>
+<td>保留双字</td>
+</tr>
+<tr>
+<td>RESQ</td>
+<td>保留四字</td>
+</tr>
+<tr>
+<td>REST</td>
+<td>保留十个字</td>
+</tr>
+</tbody>
+</table>
+<h2>多种定义</h2>
+<p>一个程序中可以有多个数据定义语句。例如</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">choice DB </span><span class="pl-s">'y'</span>
+<span class="pl-en">number1 DW </span><span class="pl-c1">123456</span>
+<span class="pl-en">number2 DD </span><span class="pl-c1">123456789</span></pre></div>
+<h2>多重初始化</h2>
+<p>TIMES 指令允许多次初始化为相同的值。下面语句定义一个大小为9的标记数组并将其初始化为零</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">marks TIMES </span><span class="pl-c1">9</span><span class="pl-en"> DW </span><span class="pl-c1">0</span></pre></div>
+<p>TIMES指令在定义数组和表时很有用</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">9</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">stars</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">starts times </span><span class="pl-c1">9</span><span class="pl-en"> db </span><span class="pl-s">'*'</span></pre></div>
+<h1>常量</h1>
+<h2>常量</h2>
+<p>nasm提供了几个定义常量的指令。之前我们已经使用了EQU指令，下面将特别讨论几个</p>
+<ul>
+<li>EQU</li>
+<li>%assign</li>
+<li>%define</li>
+</ul>
+<h2>EQU指令</h2>
+<p>EQU指令用于定义常量。EQU指令的语法如下</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">constant_name equ expression</span>
+
+<span class="pl-en">total_students equ </span><span class="pl-c1">50</span>
+<span class="pl-en">length equ </span><span class="pl-c1">20</span>
+<span class="pl-en">width equ </span><span class="pl-c1">10</span>
+<span class="pl-en">area equ length </span><span class="pl-s1">*</span><span class="pl-en"> width</span></pre></div>
+<p>以上代码段将area定义为200</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">SYS_EXIT equ </span><span class="pl-c1">1</span>
+<span class="pl-en">SYS_WRITE equ </span><span class="pl-c1">4</span>
+<span class="pl-en">SYS_READ equ </span><span class="pl-c1">3</span>
+<span class="pl-en">STDIN equ </span><span class="pl-c1">0</span>
+<span class="pl-en">STDOUT equ </span><span class="pl-c1">1</span>
+
+
+<span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">msg_1 db </span><span class="pl-s">'Hello, programers!\n'</span><span class="pl-s1">,</span><span class="pl-c1">0xA</span><span class="pl-s1">,</span><span class="pl-en">0XD</span>
+<span class="pl-en">length_1 equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg_1</span>
+
+<span class="pl-en">msg_2 db </span><span class="pl-s">'Please input a number:'</span><span class="pl-s1">,</span><span class="pl-en">0XA</span><span class="pl-s1">,</span><span class="pl-en">0XD</span>
+<span class="pl-en">length_2 equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg_2</span>
+
+<span class="pl-en">msg_3 db </span><span class="pl-s">'Read a number:'</span>
+<span class="pl-en">length_3 equ $ </span><span class="pl-s1">-</span><span class="pl-en"> msg_3</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .bss</span>
+<span class="pl-en">	num resb </span><span class="pl-c1">5</span>
+
+
+<span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">length_1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg_1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">STDOUT</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_WRITE</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">length_2 </span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg_2 </span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">STDOUT</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_WRITE</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">5</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">num</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">STDIN</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_READ</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">length_3 </span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg_3 </span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">STDOUT</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_WRITE</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">num</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">STDOUT</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_WRITE</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_EXIT</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
+<h2>%assign指令</h2>
+<p>在%assign指令可以用来定义数字常量像equ指令。该指令允许重新定义。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">%assign</span> <span class="pl-en">total </span><span class="pl-c1">10</span><span class="pl-c">;定义常量total为10</span>
+
+<span class="pl-c1">%assign</span> <span class="pl-en">total </span><span class="pl-c1">20</span><span class="pl-c">;重新定义为20</span></pre></div>
+<p><strong>注意</strong></p>
+<p>该指令区分大小写</p>
+<h2>%define指令</h2>
+<p>在%define指令允许定义数值和字符串常量。类似于#define</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">%define</span> <span class="pl-en">PTR </span><span class="pl-s1">[</span><span class="pl-v">EBP</span><span class="pl-s1">+</span><span class="pl-c1">4</span><span class="pl-s1">]</span></pre></div>
+<p>该指令还允许重新定义，并且区分大小写。</p>
+<h1>算术指令</h1>
+<h2>INC指令</h2>
+<p>INC 指令用于将操作数加1.它可以对寄存器或内存中的单个操作数起作用</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">INC</span><span class="pl-en"> destination</span>
+
+<span class="pl-k">INC</span><span class="pl-en"> </span><span class="pl-v">EBX</span><span class="pl-c">; 32位寄存器，自增1</span>
+<span class="pl-k">INC</span><span class="pl-en"> </span><span class="pl-v">DL</span><span class="pl-c">; 8位寄存器 自增1</span>
+
+<span class="pl-k">INC</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">count</span><span class="pl-s1">]</span><span class="pl-c">;变量count 自增1</span></pre></div>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
