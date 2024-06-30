@@ -99,15 +99,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <h2>data段</h2>
 <p>数据段被用于声明初始化的数据或常数。此数据在运行时不会更改。可以在段中声明各种常用值，文件名或缓冲区大小等。</p>
-<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.data</span></pre></div>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .data</span></pre></div>
 <h2>bss段</h2>
 <p>在bss声明变量。</p>
-<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.bss</span>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .bss</span>
 
 </pre></div>
 <h2>text段</h2>
 <p>代码段被用于保持实际的代码。该段必须以全集声明_start开头，该声明告诉内核程序从何处开始执行。</p>
-<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en">.</span><span class="pl-k">test</span>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .</span><span class="pl-k">test</span>
     <span class="pl-c1">global</span> <span class="pl-en">_start</span>
 <span class="pl-en">_start:</span></pre></div>
 <h2>注释</h2>
@@ -684,6 +684,157 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <span class="pl-k">INC</span><span class="pl-en"> </span><span class="pl-v">DL</span><span class="pl-c">; 8位寄存器 自增1</span>
 
 <span class="pl-k">INC</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">count</span><span class="pl-s1">]</span><span class="pl-c">;变量count 自增1</span></pre></div>
+<h2>DEC指令</h2>
+<p>DEC指令用于将操作数减一。它可以对在寄存器或内存中的单个操作数起作用。</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">DEC</span><span class="pl-en"> destination</span></pre></div>
+<p>操作数目的可以是8位，16位或32位操作数</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">segment .data</span>
+<span class="pl-en">	count dw </span><span class="pl-c1">0</span>
+<span class="pl-en">	value db </span><span class="pl-c1">15</span>
+
+<span class="pl-en">segment .text</span>
+<span class="pl-en">	</span><span class="pl-k">inc</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">count</span><span class="pl-s1">]</span>
+<span class="pl-en">	</span><span class="pl-k">dec</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">value</span><span class="pl-s1">]</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en">count</span>
+<span class="pl-en">	</span><span class="pl-k">inc</span><span class="pl-en"> word </span><span class="pl-s1">[</span><span class="pl-v">ebx</span><span class="pl-s1">]</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">esi</span><span class="pl-s1">,</span><span class="pl-en"> value</span>
+<span class="pl-en">	</span><span class="pl-k">dec</span><span class="pl-en"> byte </span><span class="pl-s1">[</span><span class="pl-v">esi</span><span class="pl-s1">]</span></pre></div>
+<h2>ADD和SUB指令</h2>
+<p>ADD和SUB指令用于对字节，字和双字大小的二进制数进行简单的加/减，即分别用于添加或减去8位、16位、和32位操作数</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">ADD</span><span class="pl-en">/</span><span class="pl-k">SUB</span><span class="pl-en"> destination</span><span class="pl-s1">,</span><span class="pl-en"> source</span></pre></div>
+<p>ADD/SUB指令可以用于</p>
+<ul>
+<li>寄存器 to 寄存器</li>
+<li>内存 to 寄存器</li>
+<li>寄存器 to 内存</li>
+<li>寄存器 to 常量数据</li>
+<li>内存 to 常量数据</li>
+</ul>
+<p>但是，像其他指令一样，使用ADD/SUB指令也无法进行存储器到存储器的操作。ADD或SUB操作设置或清除溢出和进位标志</p>
+<p>下面的示例将要求用于输入两位数字，分别将这些数字存储在EAX和EBX寄存器中，将这些值相加，将结果存储在res存储位置中，最后显示显示结果</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c">; 为什么equ 指令可以不在section .data中</span>
+
+<span class="pl-en">SYS_EXIT equ </span><span class="pl-c1">1</span>
+<span class="pl-en">SYS_READ equ </span><span class="pl-c1">3</span>
+<span class="pl-en">SYS_WRITE equ </span><span class="pl-c1">4</span>
+<span class="pl-en">STDIN equ </span><span class="pl-c1">0</span>
+<span class="pl-en">STDOUT equ </span><span class="pl-c1">1</span>
+
+<span class="pl-en">segment .data</span>
+<span class="pl-en">   msg1 db </span><span class="pl-s">"Enter a digit "</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">0xA</span><span class="pl-s1">,</span><span class="pl-c1">0xD</span><span class="pl-en"> </span>
+<span class="pl-en">   len1 equ $</span><span class="pl-s1">-</span><span class="pl-en"> msg1 </span>
+
+<span class="pl-en">   msg2 db </span><span class="pl-s">"Please enter a second digit"</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">0xA</span><span class="pl-s1">,</span><span class="pl-c1">0xD</span><span class="pl-en"> </span>
+<span class="pl-en">   len2 equ $</span><span class="pl-s1">-</span><span class="pl-en"> msg2 </span>
+
+<span class="pl-en">   msg3 db </span><span class="pl-s">"The sum is: "</span>
+<span class="pl-en">   len3 equ $</span><span class="pl-s1">-</span><span class="pl-en"> msg3</span>
+
+<span class="pl-en">segment .bss</span>
+<span class="pl-en">   num1 resb </span><span class="pl-c1">2</span><span class="pl-en"> </span>
+<span class="pl-en">   num2 resb </span><span class="pl-c1">2</span><span class="pl-en"> </span>
+<span class="pl-en">   res resb </span><span class="pl-c1">1</span><span class="pl-en"> </span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .text </span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_WRITE   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDOUT   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> msg1   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> len1 </span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-en">  </span>
+
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_READ </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDIN  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> num1 </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">2</span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-en">  </span>
+
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_WRITE  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDOUT   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> msg2  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> len2   </span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_READ  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDIN  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> num2 </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">2</span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span><span class="pl-en">  </span>
+
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_WRITE   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDOUT   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> msg3  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> len3   </span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+
+<span class="pl-c">   ; moving the first number to eax register and second number to ebx</span>
+<span class="pl-c">   ; and subtracting ascii '0' to convert it into a decimal number</span>
+<span class="pl-en">  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">num1</span><span class="pl-s1">]</span>
+<span class="pl-en">   </span><span class="pl-k">sub</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s">'0'</span>
+<span class="pl-en">  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">num2</span><span class="pl-s1">]</span>
+<span class="pl-en">   </span><span class="pl-k">sub</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s">'0'</span>
+
+<span class="pl-c">   ; add eax and ebx</span>
+<span class="pl-en">   </span><span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-v">ebx</span>
+<span class="pl-c">   ; add '0' to to convert the sum from decimal to ASCII</span>
+<span class="pl-en">   </span><span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-s">'0'</span>
+
+<span class="pl-c">   ; storing the sum in memory location res</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">res</span><span class="pl-s1">],</span><span class="pl-en"> </span><span class="pl-v">eax</span>
+
+<span class="pl-c">   ; print the sum </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en"> SYS_WRITE  </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-en"> STDOUT</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en"> res   </span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">1</span><span class="pl-en">  </span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">0x80</span>
+<span class="pl-en">exit:</span>
+<span class="pl-en">   </span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-en">SYS_EXIT</span>
+<span class="pl-en">   </span><span class="pl-k">xor</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-v">ebx</span>
+<span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
+<h2>MUL/IMUL指令</h2>
+<p>有两条指令用于将二进制数据相乘。MUL（乘法）指令处理未签名的数据，而IMUL（整数乘法）则处理签名数据。两条指令影响进位和溢出标志</p>
+<p>MUL/IMUL指令的语法如下：</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">MUL</span><span class="pl-en">/</span><span class="pl-k">IMUL</span><span class="pl-en"> multiplier</span></pre></div>
+<p>在这种情况下，被乘数都将在一个累加器中，具体取决于被乘数和乘数的大小，并更具操作数的大小，生成的乘积还将存储在两个寄存器中。以下部分说明了三种不同情况下的MUL指令</p>
+<table role="table">
+<thead>
+<tr>
+<th>情况</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>当两个字节相乘时</td>
+<td>被乘数在AL寄存器中，而乘数在存储器或<br>另一个寄存器中为一个字节。此情况使用AX。<br>乘积的高8位存储在AH中，低8位存储在AL中。</td>
+</tr>
+<tr>
+<td>当两个单字相乘时</td>
+<td>被乘数应位于AX寄存器中，并且乘数是内存<br>或其他寄存器中的一个字。列如，对于MUL DX之类的指令，<br>必须将乘数存储在DX中，将被乘数存储在AX中。结果乘积是一个双字。<br>将需要两个寄存器。高阶（最左侧）部分存储在DX中，而低阶（最右侧）<br>部分存储在AX中</td>
+</tr>
+<tr>
+<td>当两个双字值相乘时</td>
+<td>当两个双字值相乘时，被乘数应位于EAX中，并且该乘数是存储<br>在存储器或另一个存储器中的双字值。生成的乘积存储在EDX:EAX<br>寄存器中，即，高32位存储在EDX寄存器中，低32位存储在EAX寄存器中</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">AL</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">10</span>
+<span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">DL</span><span class="pl-s1">,</span><span class="pl-en"> </span><span class="pl-c1">25</span>
+<span class="pl-k">MUL</span><span class="pl-en"> </span><span class="pl-v">DL</span>
+
+<span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">DL</span><span class="pl-s1">,</span><span class="pl-c1">0FFH</span>
+<span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">AL</span><span class="pl-s1">,</span><span class="pl-c1">0BEH</span>
+<span class="pl-k">IMUL</span><span class="pl-en"> </span><span class="pl-v">DL</span>
+</pre></div>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
