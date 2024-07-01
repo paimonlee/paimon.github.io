@@ -4,7 +4,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
     <link rel="icon" href="https://avatars.githubusercontent.com/u/38132146"><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
@@ -13,15 +13,15 @@
 ## 基本用法
 ```shell
 # 按照字母顺序排序file.txt的行，并输出到标准输出。">
-<meta property="og:title" content="【Shell命令】sort命令">
+<meta property="og:title" content="【Shell命令】sort">
 <meta property="og:description" content="sort命令是Unix系统强大的文件文本排序工具
 ## 基本用法
 ```shell
 # 按照字母顺序排序file.txt的行，并输出到标准输出。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell-ming-ling-%E3%80%91sort-ming-ling.html">
+<meta property="og:url" content="https://paimonlee.github.io/paimon.github.io/post/%E3%80%90Shell-ming-ling-%E3%80%91sort.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/38132146">
-<title>【Shell命令】sort命令</title>
+<title>【Shell命令】sort</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -52,7 +52,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">【Shell命令】sort命令</h1>
+<h1 class="postTitle">【Shell命令】sort</h1>
 <div class="title-right">
     <a href="https://paimonlee.github.io/paimon.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -92,8 +92,10 @@ sort -o output.txt file.txt</pre></div>
 <li>f或-ignore-case：在排序时忽略大小写。</li>
 </ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
+
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
+
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="https://paimonlee.github.io/paimon.github.io"> Paimon's blog </a>
 <p>
@@ -148,6 +150,8 @@ console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5p
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
 
 function openComments(){
     cm=document.getElementById("comments");
