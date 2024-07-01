@@ -4,7 +4,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
     <link rel="icon" href="https://avatars.githubusercontent.com/u/38132146"><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
@@ -801,7 +801,7 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <span class="pl-en">   </span><span class="pl-k">xor</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-v">ebx</span>
 <span class="pl-en">   </span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
 <h2>MUL/IMUL指令</h2>
-<p>有两条指令用于将二进制数据相乘。MUL（乘法）指令处理未签名的数据，而IMUL（整数乘法）则处理签名数据。两条指令影响进位和溢出标志</p>
+<p>有两条指令用于将二进制数据相乘。MUL（乘法）指令处理unsign的数据，而IMUL（整数乘法）则处理sign数据。两条指令影响进位和溢出标志</p>
 <p>MUL/IMUL指令的语法如下：</p>
 <div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">MUL</span><span class="pl-en">/</span><span class="pl-k">IMUL</span><span class="pl-en"> multiplier</span></pre></div>
 <p>在这种情况下，被乘数都将在一个累加器中，具体取决于被乘数和乘数的大小，并更具操作数的大小，生成的乘积还将存储在两个寄存器中。以下部分说明了三种不同情况下的MUL指令</p>
@@ -833,8 +833,157 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 
 <span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">DL</span><span class="pl-s1">,</span><span class="pl-c1">0FFH</span>
 <span class="pl-k">MOV</span><span class="pl-en"> </span><span class="pl-v">AL</span><span class="pl-s1">,</span><span class="pl-c1">0BEH</span>
-<span class="pl-k">IMUL</span><span class="pl-en"> </span><span class="pl-v">DL</span>
-</pre></div>
+<span class="pl-k">IMUL</span><span class="pl-en"> </span><span class="pl-v">DL</span></pre></div>
+<h2>DIV/IDIV指令</h2>
+<p>除法运算生成两个元素-商和余数。在除法的情况下，可能会发生溢出。如果发生溢出，处理器将产生中断。DIV用于unsign数据，IDIV用于签名数据</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">DIV</span><span class="pl-en">/</span><span class="pl-k">IDIV</span><span class="pl-en"> divisor</span></pre></div>
+<table role="table">
+<thead>
+<tr>
+<th>情况</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>当除数是1个字节时</td>
+<td>假定被除数在AX寄存器（16位）中。除法后，商进入AL寄存器，余数进入AH寄存器</td>
+</tr>
+<tr>
+<td>当除数为1个字时</td>
+<td>假定被除数在DX：AX寄存器32位长，高位16在DX中，低位16位在AX中。除后16位的商进入AX寄存器，其余16位进入DX寄存器</td>
+</tr>
+<tr>
+<td>当除数为双字时</td>
+<td>假定被除数在EDX：EAX寄存器中被除数64位长。高32位在EDX中，低阶32位位于EAX中。除后32位的商进入EAX寄存器，而32位的余数进入EDX寄存器</td>
+</tr>
+</tbody>
+</table>
+<p>以下示例将8除以2.被除数8存储在16位AX寄存器中，除数2存储在8位BL寄存器中</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">msg db </span><span class="pl-s">'The result is:'</span><span class="pl-s1">,</span><span class="pl-c1">0xA</span><span class="pl-s1">,</span><span class="pl-c1">0xD</span>
+<span class="pl-en">len equ $</span><span class="pl-s1">-</span><span class="pl-en">msg</span>
+
+<span class="pl-en">segment .bss</span>
+<span class="pl-en">res resb </span><span class="pl-c1">1</span>
+
+<span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ax</span><span class="pl-s1">,</span><span class="pl-s">'8'</span>
+<span class="pl-en">	</span><span class="pl-k">sub</span><span class="pl-en"> </span><span class="pl-v">ax</span><span class="pl-s1">,</span><span class="pl-s">'0'</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">bl</span><span class="pl-s1">,</span><span class="pl-s">'2'</span>
+<span class="pl-en">	</span><span class="pl-k">sub</span><span class="pl-en"> </span><span class="pl-v">bl</span><span class="pl-s1">,</span><span class="pl-s">'0'</span>
+<span class="pl-en">	</span><span class="pl-k">div</span><span class="pl-en"> </span><span class="pl-v">bl</span>
+<span class="pl-en">	</span><span class="pl-k">add</span><span class="pl-en"> </span><span class="pl-v">ax</span><span class="pl-s1">,</span><span class="pl-s">'0'</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-s1">[</span><span class="pl-en">res</span><span class="pl-s1">],</span><span class="pl-v">ax</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">msg</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">res</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">0</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
+<h1>逻辑指令</h1>
+<h2>逻辑指令</h2>
+<p>处理器指令集提供指令AND、OR、XOR、TEST和NOT布尔逻辑</p>
+<table role="table">
+<thead>
+<tr>
+<th>指令</th>
+<th>格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AND</td>
+<td>AND 操作数1,操作数2</td>
+</tr>
+<tr>
+<td>OR</td>
+<td>OR 操作数1,操作数2</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td>XOR 操作数1,操作数2</td>
+</tr>
+<tr>
+<td>TEST</td>
+<td>TEST 操作数1,操作数2</td>
+</tr>
+<tr>
+<td>NOT</td>
+<td>NOT 操作数1</td>
+</tr>
+</tbody>
+</table>
+<p>在所有情况下，第一个操作数都可以在寄存器或内存中。第二个操作数可以实在寄存器/内存，也可以是常数。但是，<strong>内存到内存操作是不可以的</strong></p>
+<h2>AND指令</h2>
+<p>AND指令用于通过执行按位AND运算来支持逻辑表达式</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">             Operand1:  </span><span class="pl-c1">0101</span>
+<span class="pl-en">             Operand2:  </span><span class="pl-c1">0011</span>
+<span class="pl-s1">----------------------------</span>
+<span class="pl-en">After </span><span class="pl-k">AND</span><span class="pl-en"> </span><span class="pl-s1">-</span><span class="pl-en">&gt; Operand1:       </span><span class="pl-c1">0001</span></pre></div>
+<p>AND操作可用于清除一个或多个位。例如，假设BL寄存器包含00111010，如果要将高阶位清零，则将其与0FH进行与运算</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">AND</span><span class="pl-en"> </span><span class="pl-v">BL</span><span class="pl-s1">,</span><span class="pl-c1">0FH</span></pre></div>
+<p>如果要检查给定 的数字是偶数还是奇数，一个简单的测试是检查数字的最低有效位。如果为1 ，则为奇数，否则为偶数。假设数字在AL寄存器中，我们可以写</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-k">AND</span><span class="pl-en"> </span><span class="pl-v">AL</span><span class="pl-s1">,</span><span class="pl-c1">01H</span>
+<span class="pl-k">JZ</span><span class="pl-en"> EVEN_NUMBER</span></pre></div>
+<p>以下程序说明了这点</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-c1">section</span><span class="pl-en"> .data</span>
+<span class="pl-en">even_msg db </span><span class="pl-s">'Even Number!'</span>
+<span class="pl-en">len1 equ $ </span><span class="pl-s1">-</span><span class="pl-en"> even_msg</span>
+
+<span class="pl-en">odd_msg db </span><span class="pl-s">'Odd Number!'</span>
+<span class="pl-en">len2 equ $ </span><span class="pl-s1">-</span><span class="pl-en"> odd_msg</span>
+
+
+<span class="pl-c1">section</span><span class="pl-en"> .text</span>
+	<span class="pl-c1">global</span> <span class="pl-en">_start</span>
+
+<span class="pl-en">_start:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ax</span><span class="pl-s1">,</span><span class="pl-c1">8h</span>
+<span class="pl-en">	</span><span class="pl-k">and</span><span class="pl-en"> </span><span class="pl-v">ax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">jz</span><span class="pl-en"> evnn</span>
+
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">odd_msg</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len2</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+<span class="pl-en">	</span><span class="pl-k">jmp</span><span class="pl-en"> outprog</span>
+
+<span class="pl-en">evnn:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ah</span><span class="pl-s1">,</span><span class="pl-c1">09h</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">4</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ebx</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">ecx</span><span class="pl-s1">,</span><span class="pl-en">even_msg</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">edx</span><span class="pl-s1">,</span><span class="pl-en">len1</span>
+<span class="pl-en">	</span><span class="pl-k">int</span><span class="pl-en"> </span><span class="pl-c1">80h</span>
+
+<span class="pl-en">outprog:</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-v">eax</span><span class="pl-s1">,</span><span class="pl-c1">1</span>
+<span class="pl-en">	</span><span class="pl-k">mov</span><span class="pl-en"> </span><span class="pl-c1">80h</span></pre></div>
+<p>同样，要清楚整个寄存器，可以将其与00H进行与运算</p>
+<h2>OR指令</h2>
+<p>OR指令用于执行按位或运算来支持逻辑表达式。两个中的任意一个为一或都为一，则按位OR运算符将返回1。如果两个位均为零，则返回0</p>
+<div class="highlight highlight-source-assembly"><pre class="notranslate"><span class="pl-en">             Operand1:     </span><span class="pl-c1">0101</span>
+<span class="pl-en">             Operand2:     </span><span class="pl-c1">0011</span>
+<span class="pl-s1">----------------------------</span>
+<span class="pl-en">After </span><span class="pl-k">OR</span><span class="pl-en"> </span><span class="pl-s1">-</span><span class="pl-en">&gt; Operand1:    </span><span class="pl-c1">0111</span></pre></div>
+<p>或运算可用于设置一个或多个位。如果AL寄存器包含0011 1010，则需要设置四个低阶位，可以将其与值0000 1111即0FH进行或运算</p>
 <h1>内存复制</h1>
 <h1>堆栈指令</h1>
 <h1>汇编如何写函数</h1>
@@ -844,8 +993,10 @@ ld -m elf_i386 -s -o hello hello.o</pre></div>
 <a href="https://arthurchiao.art/blog/x86-asm-guide-zh/" rel="nofollow">简明 x86 汇编指南</a><br>
 <a href="https://cainiaoya.com/assemblylanguage/assembly-language-jiaocheng.html" rel="nofollow">汇编基础语法 菜鸟学院</a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
+
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
+
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="https://paimonlee.github.io/paimon.github.io"> Paimon's blog </a>
 <p>
@@ -900,6 +1051,8 @@ console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5p
 <script>
 document.getElementById("pathHome").setAttribute("d",IconList["home"]);
 document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
 
 function openComments(){
     cm=document.getElementById("comments");
